@@ -6,11 +6,16 @@ import {getChart} from "billboard-top-100"
 import Dropdowns from "./components/Dropdowns"
 
 function App() {
-  const [date, setDate] = useState(moment().format("YYYY-MM-DD"))
+  const [date, setDate] = useState({
+    year: moment().format("YYYY"),
+    month: moment().format('MM'),
+    day: moment().format('DD')
+  })
   const [chart, setChart] = useState(null)
 
+  const dateFormatted = `${date.year}-${date.month}-${date.day}`
   useEffect(()=> {
-    getChart('hot-100', date, (err, ch) => {
+    getChart('hot-100', dateFormatted, (err, ch) => {
       if (err) console.log(err)
       setChart(ch)
     })
@@ -37,8 +42,9 @@ function App() {
       </h1>
       <Dropdowns date = {date} setDate = {setDate}/>
       <h2>
-        Top 100 for week of {date}
+        Top 100 for week of {dateFormatted}
       </h2>
+      <div className="list-container">
       {chart && chart["songs"].map((ele, ind) => {
         console.log(ele)
         return (
@@ -46,6 +52,8 @@ function App() {
         )
        
       })}
+      </div>
+      
     </div>
   );
 }
