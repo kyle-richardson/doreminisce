@@ -27,7 +27,7 @@ const SongList = ({chart})=> {
                 return (
                     ind <=25 && (
                         <div key={ele.title}>
-                            <iframe id="ytplayer" type="text/html" width="250" height="250"
+                            <iframe title={ele.title} id="ytplayer" type="text/html" width="250" height="250"
                                 src={`https://www.youtube.com/embed/${videoList[ind]}?autoplay=0`}
                                 frameBorder="0"></iframe>
                             <a href={`https://www.youtube.com/watch?v=${videoList[ind]}`}>{`${ind+1}. ${ele.title}`}</a>
