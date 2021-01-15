@@ -4,6 +4,8 @@ import './App.css';
 import moment from "moment"
 import {getChart} from "billboard-top-100"
 import Dropdowns from "./components/Dropdowns"
+import SongList from "./components/SongList"
+import SongSearch from "./components/SongSearch"
 
 function App() {
   const [date, setDate] = useState({
@@ -44,16 +46,10 @@ function App() {
       <h2>
         Top 100 for week of {dateFormatted}
       </h2>
-      <div className="list-container">
-      {chart && chart["songs"].map((ele, ind) => {
-        console.log(ele)
-        return (
-          <p key={ele.title}>{`${ind+1}. ${ele.title}`}</p>
-        )
-       
-      })}
-      </div>
-      
+      {chart && <SongList chart = {chart}/>}
+      {/* <iframe id="ytplayer" type="text/html" width="250" height="250"
+        src="https://www.youtube.com/embed/dPhwbZBvW2o?autoplay=0"
+        frameborder="0"></iframe> */}
     </div>
   );
 }
