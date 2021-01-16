@@ -16,25 +16,25 @@ const SongList = ({chart})=> {
             })
             .catch(err=> {
                 console.log(err)
+                setIsLoading(false)
             })
         }
         setIsLoading(false)
     },[chart])
     
     return isLoading ? <p style={{textAlign: "center"}}>"Loading Data..."</p> : (
-        <div className="list-container">
-            {videoList.length > 0 && chart["songs"].map((ele, ind) => {
-                return (
+        <div className={videoList.length > 0 ? "list-container" : "list-container-fallback"}>
+            {chart["songs"].map((song, ind) => {
+                return videoList[ind] ? (
                     ind <=maxOnPage && (
-                        <div key={ele.title}>
-                            <iframe title={ele.title} class="ytplayer" type="text/html" width="250" height="250"
+                        <div key={song.title}>
+                            <iframe title={song.title} class="ytplayer" type="text/html" width="250" height="250"
                                 src={`https://www.youtube.com/embed/${videoList[ind]}?autoplay=0`}
                                 frameBorder="0"></iframe>
-                            <a href={`https://www.youtube.com/watch?v=${videoList[ind]}`}>{`${ind+1}. ${ele.title}`}</a>
+                            <a href={`https://www.youtube.com/watch?v=${videoList[ind]}`}>{`${ind+1}. ${song.title}`}</a>
                         </div>
-                )
-                
-                )
+                    )
+                ) :  <a href={`https://www.youtube.com/results?search_query=${song.title} ${song.artist}`}>{`${ind+1}. ${song.title} - ${song.artist}`}</a>
             })
         }
         </div>

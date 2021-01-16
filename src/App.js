@@ -42,7 +42,7 @@ function App() {
       </h1>
       <Dropdowns date = {date} setDate = {setDate}/>
       <h2>
-        Top 25 songs for week of {dateFormatted}
+        Top songs for week of {dateFormatted}
       </h2>
       {chart && <SongList chart = {chart}/>}
       {/* <iframe class="ytplayer" type="text/html" width="250" height="250"
