@@ -5,14 +5,14 @@ import axios from "axios"
 const SongList = ({chart})=> {
     const [videoList, setVideoList] = useState([])
     const maxOnPage = 25
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
     useEffect(()=> {
         setIsLoading(true)
         for (let x=0;x<=maxOnPage;x++){
             axios.get(`${process.env.REACT_APP_YOUTUBE_API_BASE_URL}?part=snippet&filters=0&q=${chart.songs[x].title},${chart.songs[x].artist}&type=video&videoEmbeddable=true&maxResults=1&key=${process.env.REACT_APP_API_KEY}`)
             .then(res => {
                 console.log(res.data)
-                setVideoList(prev => [...prev,res.data.items[0].id.videoID])
+                setVideoList(prev => [...prev,res.data.items[0].id.videoId])
             })
             .catch(err=> {
                 console.log(err)
@@ -21,13 +21,13 @@ const SongList = ({chart})=> {
         setIsLoading(false)
     },[chart])
     
-    return isLoading ? <p>"..."</p> : (
+    return isLoading ? <p style={{textAlign: "center"}}>"Loading Data..."</p> : (
         <div className="list-container">
-            {chart["songs"].map((ele, ind) => {
+            {videoList.length > 0 && chart["songs"].map((ele, ind) => {
                 return (
-                    ind <=25 && (
+                    ind <=maxOnPage && (
                         <div key={ele.title}>
-                            <iframe title={ele.title} id="ytplayer" type="text/html" width="250" height="250"
+                            <iframe title={ele.title} class="ytplayer" type="text/html" width="250" height="250"
                                 src={`https://www.youtube.com/embed/${videoList[ind]}?autoplay=0`}
                                 frameBorder="0"></iframe>
                             <a href={`https://www.youtube.com/watch?v=${videoList[ind]}`}>{`${ind+1}. ${ele.title}`}</a>

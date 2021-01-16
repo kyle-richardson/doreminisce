@@ -1,6 +1,4 @@
 import React, {useState, useEffect} from "react"
-import logo from './logo.svg';
-import './App.css';
 import moment from "moment"
 import {getChart} from "billboard-top-100"
 import Dropdowns from "./components/Dropdowns"
@@ -44,10 +42,10 @@ function App() {
       </h1>
       <Dropdowns date = {date} setDate = {setDate}/>
       <h2>
-        Top 100 for week of {dateFormatted}
+        Top 25 songs for week of {dateFormatted}
       </h2>
       {chart && <SongList chart = {chart}/>}
-      {/* <iframe id="ytplayer" type="text/html" width="250" height="250"
+      {/* <iframe class="ytplayer" type="text/html" width="250" height="250"
         src="https://www.youtube.com/embed/dPhwbZBvW2o?autoplay=0"
         frameborder="0"></iframe> */}
     </div>
