@@ -2,31 +2,42 @@ import React, {useState, useEffect} from "react"
 import Select from "@material-ui/core/Select"
 import FormControl from "@material-ui/core/FormControl"
 import InputLabel from "@material-ui/core/InputLabel"
+import Button from "@material-ui/core/Button"
 import {getYears, getMonths, getDays} from "../utils/functions"
 
 const Dropdowns = ({date, setDate})=> {
-  let years = getYears(1970)
+  let years = getYears(1950)
   let months = getMonths()
   let days = getDays(date.year, date.month)
+  let [localDate, setLocalDate] = useState(date)
   useEffect(()=> {
     // years = getYears(1970)
   },[])
 
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    setDate({
+      year: localDate.year,
+      month: localDate.month,
+      day: localDate.day
+    })
+  }
   const handleChange = (event) => {
     event.preventDefault()
     const {name, value} = event.target
-    setDate(prev=> ({
+    setLocalDate(prev=> ({
       ...prev, 
       [name]: [value]
     }))
   }
   return (
-    <div className="dropdown-container">
+    <div>
+      <form className="dropdown-container" onSubmit = {handleSubmit}>
       <FormControl>
         <InputLabel htmlFor="year">Year</InputLabel>
         <Select
           native
-          value={date.year}
+          value={localDate.year}
           onChange={handleChange}
           inputProps={{
             name: 'year',
@@ -41,7 +52,7 @@ const Dropdowns = ({date, setDate})=> {
         <InputLabel htmlFor="month">Month</InputLabel>
         <Select
           native
-          value={String(date.month)}
+          value={String(localDate.month)}
           onChange={handleChange}
           inputProps={{
             name: 'month',
@@ -56,7 +67,7 @@ const Dropdowns = ({date, setDate})=> {
         <InputLabel htmlFor="day">Day</InputLabel>
         <Select
           native
-          value={date.day}
+          value={localDate.day}
           onChange={handleChange}
           inputProps={{
             name: 'day',
@@ -67,6 +78,8 @@ const Dropdowns = ({date, setDate})=> {
           {days && days.map(ele => <option key={ele} value={ele}>{ele}</option>)}
         </Select>
       </FormControl>
+      <Button variant="contained" color="primary" type="submit">Update List</Button>
+      </form>
     </div>
   );
 }

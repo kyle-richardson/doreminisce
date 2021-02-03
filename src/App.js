@@ -1,6 +1,4 @@
 import React, {useState, useEffect} from "react"
-import logo from './logo.svg';
-import './App.css';
 import moment from "moment"
 import {getChart} from "billboard-top-100"
 import Dropdowns from "./components/Dropdowns"
@@ -14,6 +12,7 @@ function App() {
     day: moment().format('DD')
   })
   const [chart, setChart] = useState(null)
+  const [filter, setFilter] = useState("")
 
   const dateFormatted = `${date.year}-${date.month}-${date.day}`
   useEffect(()=> {
@@ -43,11 +42,12 @@ function App() {
         Do-Re-Minisce
       </h1>
       <Dropdowns date = {date} setDate = {setDate}/>
+      <SongSearch filter={filter} setFilter = {setFilter}/>
       <h2>
-        Top 100 for week of {dateFormatted}
+        Top songs for week of {dateFormatted}
       </h2>
-      {chart && <SongList chart = {chart}/>}
-      {/* <iframe id="ytplayer" type="text/html" width="250" height="250"
+      {chart && <SongList filter={filter} chart = {chart}/>}
+      {/* <iframe class="ytplayer" type="text/html" width="250" height="250"
         src="https://www.youtube.com/embed/dPhwbZBvW2o?autoplay=0"
         frameborder="0"></iframe> */}
     </div>
