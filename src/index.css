@@ -17,19 +17,25 @@ p {
 	margin-bottom: 2px;
 }
 
+a {
+	color: rgb(76, 76, 167);
+}
+a:visited {
+	color: rgb(139, 90, 139);
+}
+
 .App {
 	text-align: center;
 }
 
 .dropdown-container {
 	display: flex;
-	justify-content: space-between;
-	margin: 0% 35%;
+	justify-content: center;
 }
-@media (max-width: 700px) {
-	.dropdown-container {
-		margin: 0% 10%;
-	}
+
+.dropdown {
+	margin-right: 5px;
+	padding: 0 5px;
 }
 
 .list-container {
@@ -61,4 +67,9 @@ p {
 
 .ytplayer {
 	border-radius: 4px;
+}
+
+.dark {
+	color: white;
+	background: #282c34;
 }
