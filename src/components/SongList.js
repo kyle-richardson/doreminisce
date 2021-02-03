@@ -1,25 +1,24 @@
 import React, {useState, useEffect} from "react"
-import axios from "axios"
-// import {extractSongData} from "../utils/functions"
+// import axios from "axios"
 
 const SongList = ({filter, chart})=> {
     const [videoList, setVideoList] = useState([])
-    const [songIDs, setSongIDs] = useState([])
+    // const [songIDs, setSongIDs] = useState([])
     // const maxOnPage = 25
     const [isLoading, setIsLoading] = useState(true)
     const [filteredChart, setFilteredChart] = useState(chart)
-    const makePlaylist = async () => {
-        try {
-            for (let song in chart.songs) {
-                const res = await axios.get(`${process.env.REACT_APP_YOUTUBE_API_BASE_URL}?part=snippet&filters=0&q=${song.title},${song.artist}&type=video&videoEmbeddable=true&maxResults=1&key=${process.env.REACT_APP_API_KEY}`)
-                setSongIDs(prev => [...prev, res.data.items[0].id.videoId])
-            }
-        }
-        catch (error) {
-            console.log(error)
-        }
-        window.open(`http://www.youtube.com/watch_videos?video_ids=${songIDs.join()}`)
-    }
+    // const makePlaylist = async () => {
+    //     try {
+    //         for (let song in chart.songs) {
+    //             const res = await axios.get(`${process.env.REACT_APP_YOUTUBE_API_BASE_URL}?part=snippet&filters=0&q=${song.title},${song.artist}&type=video&videoEmbeddable=true&maxResults=1&key=${process.env.REACT_APP_API_KEY}`)
+    //             setSongIDs(prev => [...prev, res.data.items[0].id.videoId])
+    //         }
+    //     }
+    //     catch (error) {
+    //         console.log(error)
+    //     }
+    //     window.open(`http://www.youtube.com/watch_videos?video_ids=${songIDs.join()}`)
+    // }
     // useEffect(()=> {
     //     setIsLoading(true)
     //     for (let x=0;x<=maxOnPage;x++){
@@ -70,7 +69,13 @@ const SongList = ({filter, chart})=> {
             }*/}
             {filteredChart.map((song, ind) => (
                 <div style={{textAlign: "left"}}>
-                    <a href={`https://www.youtube.com/results?search_query=${song.title} ${song.artist}`} target="_blank" >{`${ind+1}. ${song.title} - ${song.artist}`}</a>
+                    <a 
+                        href={`https://www.youtube.com/results?search_query=${song.title} ${song.artist}`} 
+                        target="_blank" 
+                        rel="noreferrer"
+                    >
+                        {`${ind+1}. ${song.title} - ${song.artist}`}
+                    </a>
                 </div>
             ))}
         </div>

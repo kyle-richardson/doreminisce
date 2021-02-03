@@ -11,7 +11,6 @@ const Dropdowns = ({date, setDate})=> {
   let days = getDays(date.year, date.month)
   let [localDate, setLocalDate] = useState(date)
   useEffect(()=> {
-    // years = getYears(1970)
   },[])
 
   const handleSubmit = (event) => {
@@ -33,52 +32,55 @@ const Dropdowns = ({date, setDate})=> {
   return (
     <div>
       <form className="dropdown-container" onSubmit = {handleSubmit}>
-      <FormControl>
-        <InputLabel htmlFor="year">Year</InputLabel>
-        <Select
-          native
-          value={localDate.year}
-          onChange={handleChange}
-          inputProps={{
-            name: 'year',
-            id: 'year-select',
-          }}
-        >
-          <option aria-label="None" value="" />
-          {years && years.map(ele => <option key={ele} value={ele}>{ele}</option>)}
-        </Select>
-      </FormControl>
-      <FormControl>
-        <InputLabel htmlFor="month">Month</InputLabel>
-        <Select
-          native
-          value={String(localDate.month)}
-          onChange={handleChange}
-          inputProps={{
-            name: 'month',
-            id: 'month-select',
-          }}
-        >
-          <option aria-label="None" value="" />
-          {months && months.map(ele => <option key={ele} value={ele}>{ele}</option>)}
-        </Select>
-      </FormControl>
-      <FormControl>
-        <InputLabel htmlFor="day">Day</InputLabel>
-        <Select
-          native
-          value={localDate.day}
-          onChange={handleChange}
-          inputProps={{
-            name: 'day',
-            id: 'day-select',
-          }}
-        >
-          <option aria-label="None" value="" />
-          {days && days.map(ele => <option key={ele} value={ele}>{ele}</option>)}
-        </Select>
-      </FormControl>
-      <Button variant="contained" color="primary" type="submit">Update List</Button>
+        <FormControl className="dropdown" variant="filled">
+          <InputLabel htmlFor="year">Year</InputLabel>
+          <Select
+            className="dropdown"
+            native
+            value={localDate.year}
+            onChange={handleChange}
+            inputProps={{
+              name: 'year',
+              id: 'year-select',
+            }}
+          >
+            <option aria-label="None" value="" />
+            {years && years.map(ele => <option key={ele} value={ele}>{ele}</option>)}
+          </Select>
+        </FormControl>
+        <FormControl variant="filled">
+          <InputLabel htmlFor="month">Month</InputLabel>
+          <Select
+            className="dropdown"
+            native
+            value={String(localDate.month)}
+            onChange={handleChange}
+            inputProps={{
+              name: 'month',
+              id: 'month-select',
+            }}
+          >
+            <option aria-label="None" value="" />
+            {months && months.map(ele => <option key={ele} value={ele}>{ele}</option>)}
+          </Select>
+        </FormControl>
+        <FormControl className="dropdown" variant="filled">
+          <InputLabel htmlFor="day">Day</InputLabel>
+          <Select
+            className="dropdown"
+            native
+            value={localDate.day}
+            onChange={handleChange}
+            inputProps={{
+              name: 'day',
+              id: 'day-select',
+            }}
+          >
+            <option aria-label="None" value="" />
+            {days && days.map(ele => <option key={ele} value={ele}>{ele}</option>)}
+          </Select>
+        </FormControl>
+        <Button variant="contained" color="primary" type="submit">Update List</Button>
       </form>
     </div>
   );
