@@ -9,6 +9,7 @@ import SongSearch from "./components/SongSearch"
 import Header from "./components/Header"
 import { useDarkMode } from "./utils/useDarkMode"
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import Button from "@material-ui/core/Button"
 
 
 function App() {
@@ -87,10 +88,18 @@ function App() {
         <Header toggleDarkMode={toggleDarkMode}/>
         <Dropdowns date = {date} setDate = {setDate}/>
         <SongSearch filter={filter} setFilter = {setFilter}/>
-        <h2>
+        <h3>
           Top songs for week of {dateFormatted}
-        </h2>
-        {chart && !isFetching ? <SongList filter={filter} chart = {chart}/> : <div>Loading songs...</div>}
+        </h3>
+        
+        {chart && !isFetching ? (
+        <>
+          {/* <p>To create a playlist, connect to spotify below:</p>
+          <Button>Connect to Spotify</Button> */}
+          <SongList filter={filter} chart = {chart}/>
+        </>) 
+        : <div>Loading songs...</div>
+        }
       </div>
     </ThemeProvider>
     

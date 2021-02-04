@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from "react"
+import SongRow from "./SongRow"
 // import axios from "axios"
 
 const SongList = ({filter, chart})=> {
@@ -68,15 +69,7 @@ const SongList = ({filter, chart})=> {
             }) 
             }*/}
             {filteredChart.map((song, ind) => (
-                <div key={ind} style={{textAlign: "left"}}>
-                    <a 
-                        href={`https://www.youtube.com/results?search_query=${song.title} ${song.artist}`} 
-                        target="_blank" 
-                        rel="noreferrer"
-                    >
-                        {`${ind+1}. ${song.title} - ${song.artist}`}
-                    </a>
-                </div>
+                <SongRow key = {ind} song={song} ind={ind}/>
             ))}
         </div>
         </>
