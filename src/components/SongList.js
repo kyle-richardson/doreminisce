@@ -47,7 +47,7 @@ const SongList = ({filter, chart})=> {
         setIsLoading(false)
     },[filter, chart])
     
-    return isLoading ? <p style={{textAlign: "center"}}>"Loading Songs..."</p> : (
+    return isLoading ? <p style={{textAlign: "center"}}>Loading songs...</p> : (
 
         <>
         {/* <div>
@@ -69,7 +69,7 @@ const SongList = ({filter, chart})=> {
             }) 
             }*/}
             {filteredChart.map((song, ind) => (
-                <SongRow key = {ind} song={song} ind={ind}/>
+                <SongRow key = {ind} song={song}/>
             ))}
         </div>
         </>
