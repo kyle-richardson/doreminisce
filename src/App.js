@@ -9,6 +9,7 @@ import SongSearch from "./components/SongSearch"
 import Header from "./components/Header"
 import { useDarkMode } from "./utils/useDarkMode"
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+// import Button from "@material-ui/core/Button"
 
 
 function App() {
@@ -52,8 +53,15 @@ function App() {
   // };
 
   
-  useEffect(async ()=> {
+  useEffect(()=> {
     setIsFetching(true)
+    async function fetchChart() {
+      await axios.get(`${process.env.REACT_APP_BILLBOARD_API_BASE_URL}/chart/${dateFormatted}`)
+      .then(res=> {
+        setChart(res.data)
+      })
+      .catch(err => {console.log(err)})
+    }
     // axios.request(options)
     // .then(res=> {
     //   console.log(res.data)
@@ -71,12 +79,7 @@ function App() {
     //   if (err) console.log(err)
     //   setChart(ch)
     // })
-    await axios.get(`${process.env.REACT_APP_BILLBOARD_API_BASE_URL}/chart/${dateFormatted}`)
-      .then(res=> {
-        console.log(res.data)
-        setChart(res.data)
-      })
-      .catch(err => {console.log(err)})
+    fetchChart()
     setIsFetching(false)
   },[date, dateFormatted])
   
@@ -87,10 +90,18 @@ function App() {
         <Header toggleDarkMode={toggleDarkMode}/>
         <Dropdowns date = {date} setDate = {setDate}/>
         <SongSearch filter={filter} setFilter = {setFilter}/>
-        <h2>
+        <h3>
           Top songs for week of {dateFormatted}
-        </h2>
-        {chart && !isFetching ? <SongList filter={filter} chart = {chart}/> : <div>Loading songs...</div>}
+        </h3>
+        
+        {chart && !isFetching ? (
+        <>
+          {/* <p>To create a playlist, connect to spotify below:</p>
+          <Button>Connect to Spotify</Button> */}
+          <SongList filter={filter} chart = {chart}/>
+        </>) 
+        : <div>Loading songs...</div>
+        }
       </div>
     </ThemeProvider>
     

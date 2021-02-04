@@ -8,8 +8,8 @@ import {getYears, getMonths, getDays} from "../utils/functions"
 const Dropdowns = ({date, setDate})=> {
   let years = getYears(1950)
   let months = getMonths()
-  let days = getDays(date.year, date.month)
   let [localDate, setLocalDate] = useState(date)
+  let days = getDays(localDate.year, localDate.month)
   useEffect(()=> {
   },[])
 

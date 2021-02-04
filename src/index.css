@@ -71,5 +71,34 @@ a:visited {
 
 .dark {
 	color: white;
-	background: #282c34;
+	/* background: rgb(51, 51, 51); */
+	background: black;
+}
+
+.song-card {
+	text-align: left;
+	display: flex;
+	/* border: 2px solid rgb(17, 185, 91); */
+	border-radius: 8px;
+	width: 70%;
+	align-items: center;
+	margin-bottom: 10px;
+	cursor: pointer;
+	background: rgb(51, 51, 51);
+	color: white;
+}
+
+.song-card > p {
+	padding-left: 20px;
+}
+
+.song-card:hover {
+	opacity: 0.9;
+	/* border: 2px solid rgb(9, 215, 103); */
+}
+
+@media (max-width: 700px) {
+	.song-card {
+		width: 90%;
+	}
 }
