@@ -68,7 +68,7 @@ const SongList = ({filter, chart})=> {
             }) 
             }*/}
             {filteredChart.map((song, ind) => (
-                <div style={{textAlign: "left"}}>
+                <div key={ind} style={{textAlign: "left"}}>
                     <a 
                         href={`https://www.youtube.com/results?search_query=${song.title} ${song.artist}`} 
                         target="_blank" 
