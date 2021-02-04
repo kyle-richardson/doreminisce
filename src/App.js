@@ -1,8 +1,8 @@
 
 import React, {useState, useEffect} from "react"
 import moment from "moment"
-// import axios from "axios"
-import {getChart} from "billboard-top-100"
+import axios from "axios"
+// import {getChart} from "billboard-top-100"
 import Dropdowns from "./components/Dropdowns"
 import SongList from "./components/SongList"
 import SongSearch from "./components/SongSearch"
@@ -14,6 +14,7 @@ import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 function App() {
 
   const [darkMode, setDarkMode] = useDarkMode();
+  const [isFetching, setIsFetching] = useState(true)
   const paletteType = darkMode ? "dark" : "light";
   const darkTheme = createMuiTheme({
     palette: {
@@ -41,17 +42,42 @@ function App() {
   //     'x-rapidapi-host': 'billboard-api2.p.rapidapi.com'
   //   }
   // };
-  useEffect(()=> {
+
+  // const options = {
+  //   method: 'GET',
+  //   url: `https://www.billboard.com:80/charts/hot-100/${dateFormatted}`,
+  //   headers: {
+  //     'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36'
+  //   }
+  // };
+
+  
+  useEffect(async ()=> {
+    setIsFetching(true)
     // axios.request(options)
     // .then(res=> {
     //   console.log(res.data)
     //   setChart(res.data)
     // })
     // .catch(err=> console.log(err))
-    getChart('hot-100', dateFormatted, (err, ch) => {
-      if (err) console.log(err)
-      setChart(ch)
-    })
+
+    // axios.request(options)
+    // .then(res=> {
+    //   console.log(res.data)
+    //   setChart(res.data)
+    // })
+    // .catch(err=> console.log(err))
+    // getChart('hot-100', dateFormatted, (err, ch) => {
+    //   if (err) console.log(err)
+    //   setChart(ch)
+    // })
+    await axios.get(`${process.env.REACT_APP_BILLBOARD_API_BASE_URL}/chart/${dateFormatted}`)
+      .then(res=> {
+        console.log(res.data)
+        setChart(res.data)
+      })
+      .catch(err => {console.log(err)})
+    setIsFetching(false)
   },[date, dateFormatted])
   
   
@@ -64,7 +90,7 @@ function App() {
         <h2>
           Top songs for week of {dateFormatted}
         </h2>
-        {chart && <SongList filter={filter} chart = {chart}/>}
+        {chart && !isFetching ? <SongList filter={filter} chart = {chart}/> : <div>Loading songs...</div>}
       </div>
     </ThemeProvider>
     
