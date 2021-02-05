@@ -2,17 +2,16 @@
 import React, {useState, useEffect} from "react"
 import moment from "moment"
 import axios from "axios"
-// import {getChart} from "billboard-top-100"
 import Dropdowns from "./components/Dropdowns"
 import SongList from "./components/SongList"
 import SongSearch from "./components/SongSearch"
+import PopupModal from "./components/PopupModal"
 import Header from "./components/Header"
 import { useDarkMode } from "./utils/useDarkMode"
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { useLocalStorage } from "./utils/useLocalStorage";
 import Button from "@material-ui/core/Button"
-
 import queryString from 'query-string'
 
 
@@ -22,6 +21,9 @@ function App() {
   const [spotifyConnect, setSpotifyConnect] = useState(false)
   const [darkMode, setDarkMode] = useDarkMode();
   const [isFetching, setIsFetching] = useState(true)
+  const [openModal, setOpenModal] = useState(false)
+  const [playlistURL, setPlaylistURL] = useState("")
+  const [failedPlaylistCreate, setFailedPlaylistCreate] = useState(false)
   const paletteType = darkMode ? "dark" : "light";
   const darkTheme = createMuiTheme({
     palette: {
@@ -40,12 +42,18 @@ function App() {
   const [chart, setChart] = useState(null)
   const [filter, setFilter] = useLocalStorage('filter', "")
   const [userId, setUserId] = useState("")
-  const [playlistId, setPlaylistId] = useState("")
   const [notFoundList, setNotFoundList] = useState([])
   const dateFormatted = `${date.year}-${date.month}-${date.day}`
 
   const handleSpotifyConnect = async () => {
     window.open(`${process.env.REACT_APP_BILLBOARD_API_BASE_URL}/auth-spotify`, '_self');
+  }
+  const handleCloseModal = () => {
+    setOpenModal(false)
+  }
+
+  const handleOpenModal = () => {
+    setOpenModal(true)
   }
 
   const handleCreatePlaylist = async () => {
@@ -66,7 +74,6 @@ function App() {
       const playlistId = newPlaylist.data.id
       const tracksToAdd = await findTracksOnSpotify()
       const tracksToAddFilteredNotFound = tracksToAdd.filter(track=> !track.includes("NOTFOUND"))
-      // console.log(JSON.stringify(tracksToAdd))
       const addedTracks = await axios({
           url: `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
           method: 'POST',
@@ -78,11 +85,14 @@ function App() {
             "uris": tracksToAddFilteredNotFound
           }
       })
-      console.log(newPlaylist.data.external_urls.spotify)
+      // console.log(newPlaylist.data.external_urls.spotify)
+      setPlaylistURL(newPlaylist.data.external_urls.spotify)
     
     } catch(err) {
       console.log(err)
+      setFailedPlaylistCreate(true) 
     }
+    handleOpenModal()
   }
 
   const findTracksOnSpotify = async () => {
@@ -159,6 +169,13 @@ function App() {
   return (
     <ThemeProvider theme={darkTheme}>
       <div className="App">
+        <PopupModal 
+          failedPlaylistCreate = {failedPlaylistCreate} 
+          openModal = {openModal} 
+          notFoundList = {notFoundList} 
+          handleCloseModal = {handleCloseModal}
+          playlistURL = {playlistURL}
+        />
         <Header toggleDarkMode={toggleDarkMode}/>
         <Dropdowns date = {date} setDate = {setDate}/>
         <SongSearch filter={filter} setFilter = {setFilter}/>
