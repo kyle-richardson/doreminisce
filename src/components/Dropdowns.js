@@ -3,24 +3,52 @@ import Select from "@material-ui/core/Select"
 import FormControl from "@material-ui/core/FormControl"
 import InputLabel from "@material-ui/core/InputLabel"
 import Button from "@material-ui/core/Button"
+import moment from "moment"
 import {getYears, getMonths, getDays} from "../utils/functions"
 
 const Dropdowns = ({date, setDate})=> {
   let years = getYears(1950)
   let months = getMonths()
-  let [localDate, setLocalDate] = useState(date)
+  const [localDate, setLocalDate] = useState(date)
+  const [revertToday, setRevertToday] = useState(false)
   let days = getDays(localDate.year, localDate.month)
 
+
   useEffect(()=> {
-  },[])
+    if(revertToday){
+      setLocalDate({
+        year: moment().format('YYYY'),
+        month: moment().format('MM'),
+        day: moment().format('DD')
+      })
+      setDate({
+        year: moment().format('YYYY'),
+        month: moment().format('MM'),
+        day: moment().format('DD')
+      })
+      setRevertToday(false)
+    }
+  },[revertToday, setDate])
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    setDate({
-      year: localDate.year,
-      month: localDate.month,
-      day: localDate.day
-    })
+    const dateSelected = `${localDate.year}-${localDate.month}-${localDate.day}`
+    if (localDate.year=== "" || localDate.month==="" || localDate.day === "") {
+      setRevertToday(true)
+    } 
+    else 
+    if (moment(dateSelected).isAfter()) {
+      setRevertToday(true)
+    }
+    else {
+      setDate({
+        year: localDate.year,
+        month: localDate.month,
+        day: localDate.day
+      })
+    }
+      
+    
   }
   const handleChange = (event) => {
     event.preventDefault()
@@ -84,7 +112,7 @@ const Dropdowns = ({date, setDate})=> {
             {days && days.map(ele => <option key={ele} value={ele}>{ele}</option>)}
           </Select>
         </FormControl>
-        <Button variant="contained" color="primary" type="submit">Update List</Button>
+        <Button variant="contained" color="primary" type="submit">Update</Button>
       </form>
     </div>
   );

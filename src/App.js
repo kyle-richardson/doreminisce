@@ -6,12 +6,13 @@ import Dropdowns from "./components/Dropdowns"
 import SongList from "./components/SongList"
 import SongSearch from "./components/SongSearch"
 import PopupModal from "./components/PopupModal"
+import Footer from "./components/Footer"
 import Header from "./components/Header"
+import SpotifyButton from "./components/SpotifyButton"
 import { useDarkMode } from "./utils/useDarkMode"
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { useLocalStorage } from "./utils/useLocalStorage";
-import Button from "@material-ui/core/Button"
 import queryString from 'query-string'
 
 
@@ -28,6 +29,9 @@ function App() {
   const darkTheme = createMuiTheme({
     palette: {
       type: paletteType,
+      secondary: {
+        main: "rgb(17, 185, 91)"
+      }
     }
   });
   const toggleDarkMode = () => {
@@ -46,10 +50,11 @@ function App() {
   const dateFormatted = `${date.year}-${date.month}-${date.day}`
 
   const handleSpotifyConnect = async () => {
-    window.open(`${process.env.REACT_APP_BILLBOARD_API_BASE_URL}/auth-spotify`, '_self');
+    window.open(`${process.env.REACT_APP_BILLBOARD_API_BASE_URL || 'http://localhost:5500' }/auth-spotify`, '_self');
   }
   const handleCloseModal = () => {
     setOpenModal(false)
+    setFailedPlaylistCreate(false)
   }
 
   const handleOpenModal = () => {
@@ -85,7 +90,6 @@ function App() {
             "uris": tracksToAddFilteredNotFound
           }
       })
-      // console.log(newPlaylist.data.external_urls.spotify)
       setPlaylistURL(newPlaylist.data.external_urls.spotify)
     
     } catch(err) {
@@ -97,6 +101,10 @@ function App() {
 
   const findTracksOnSpotify = async () => {
     try {
+      const searchAccessToken = await axios({
+        url: `${process.env.REACT_APP_BILLBOARD_API_BASE_URL || 'http://localhost:5500' }/auth-search`,
+        method: 'GET'
+      })
       const trackList = Promise.all(chart.songs.map(async song=> {
         let songId="NOTFOUND"
         try {
@@ -104,7 +112,7 @@ function App() {
           url: 'https://api.spotify.com/v1/search',
           method: 'GET',
           headers: {
-            'Authorization': "Bearer " + accessToken,
+            'Authorization': "Bearer " + searchAccessToken.data,
             'Content-Type': 'application/json'
           },
           params: {
@@ -140,7 +148,6 @@ function App() {
         }
       })
       .then(res=> {
-        // console.log(res.data)
         setUserId(res.data.id)
       })
       .catch(err => {
@@ -154,7 +161,7 @@ function App() {
     
     async function fetchChart() {
       setIsFetching(true)
-      await axios.get(`${process.env.REACT_APP_BILLBOARD_API_BASE_URL}/chart/${dateFormatted}`)
+      await axios.get(`${process.env.REACT_APP_BILLBOARD_API_BASE_URL || 'http://localhost:5500' }/chart/${dateFormatted}`)
       .then(res=> {
         setChart(res.data)
       })
@@ -179,26 +186,16 @@ function App() {
         <Header toggleDarkMode={toggleDarkMode}/>
         <Dropdowns date = {date} setDate = {setDate}/>
         <SongSearch filter={filter} setFilter = {setFilter}/>
-        <h3>
-          Top songs for week of {dateFormatted}
-        </h3>
-        
-        {chart && !isFetching ? (
+        {isFetching ?  <CircularProgress color="secondary"/> : 
         <>
-          {!spotifyConnect ? 
-          <div style={{marginBottom: "10px"}}>
-            <p>To create a playlist, connect to spotify below:</p>
-            <Button variant="contained" onClick={handleSpotifyConnect}>Connect to Spotify</Button>
-          </div> : 
-          <div style={{marginBottom: "10px"}}>
-            <p>Successfully connected to Spotify</p>
-            <Button variant="contained" onClick={handleCreatePlaylist}>Create a Playlist</Button>
-          </div>}
-          <SongList filter={filter} chart = {chart}/>
-        </>) 
-        : <div><CircularProgress/></div>
-        }
+          <SpotifyButton 
+              spotifyConnect = {spotifyConnect}
+              handleCreatePlaylist={handleCreatePlaylist}
+              handleSpotifyConnect={handleSpotifyConnect}/>
+          <SongList filter={filter} chart = {chart} dateFormatted = {dateFormatted}/>
+          </>}
       </div>
+      <Footer/>
     </ThemeProvider>
     
   );

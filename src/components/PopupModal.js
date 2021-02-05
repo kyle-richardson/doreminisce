@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -30,12 +30,12 @@ const PopupModal = ({playlistURL, openModal, handleCloseModal, notFoundList, fai
           <DialogContentText>
             Note: Because we use multiple resources that may code songs differently, there may be some errors in the playlist creation.
           </DialogContentText>
-          {notFoundList.length > 0 && 
+          {notFoundList.length > 0 && !failedPlaylistCreate && 
             <div style={{display: "flex", flexDirection: "column"}}>
                 <DialogContentText>
-                    We were not able to locate the following songs in Spotify.  Please consider looking for the missing songs and adding to the playlist manually:
+                    We were not able to locate the following songs in Spotify.  Consider looking for the missing songs and adding to the playlist manually:
                 </DialogContentText>
-                {notFoundList.map(item => <p>{item.title}</p>)}
+                {notFoundList.map(item => <p key={item.rank}>{item.title}</p>)}
             </div>
           }
         </DialogContent>
@@ -43,7 +43,7 @@ const PopupModal = ({playlistURL, openModal, handleCloseModal, notFoundList, fai
           <Button autoFocus onClick={handleCloseModal} color="primary">
             Close
           </Button>
-          {!failedPlaylistCreate && <Button onClick={handleViewPlaylist} color="primary" autoFocus>
+          {!failedPlaylistCreate && <Button onClick={handleViewPlaylist} color="secondary" variant="contained" autoFocus>
             View Playlist
           </Button>}
         </DialogActions>
