@@ -10,11 +10,16 @@ import Header from "./components/Header"
 import { useDarkMode } from "./utils/useDarkMode"
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import CircularProgress from '@material-ui/core/CircularProgress';
-// import Button from "@material-ui/core/Button"
+import { useLocalStorage } from "./utils/useLocalStorage";
+import Button from "@material-ui/core/Button"
 
 
 function App() {
 
+  let search = window.location.search;
+  let params = new URLSearchParams(search);
+  let queries = params.get('query');
+  console.log(queries)
   const [darkMode, setDarkMode] = useDarkMode();
   const [isFetching, setIsFetching] = useState(true)
   const paletteType = darkMode ? "dark" : "light";
@@ -27,7 +32,7 @@ function App() {
     setDarkMode(!darkMode);
   };
 
-  const [date, setDate] = useState({
+  const [date, setDate] = useLocalStorage('date', {
     year: moment().format("YYYY"),
     month: moment().format('MM'),
     day: moment().format('DD')
@@ -35,6 +40,23 @@ function App() {
   const [chart, setChart] = useState(null)
   const [filter, setFilter] = useState("")
   const dateFormatted = `${date.year}-${date.month}-${date.day}`
+
+  const handleSpotifyConnect = async () => {
+    await axios.get('https://accounts.spotify.com/authorize', {
+      params: {
+        client_id: `${process.env.REACT_APP_CLIENT_ID}`,
+        response_type: 'token',
+        redirect_uri: 'https://doreminisce.kylerichardson.tech'
+      }
+    })
+    .then(res=> {
+      console.log(res)
+
+    })
+    .catch(err=> {
+      console.log(err)
+    })
+  }
   // const options = {
   //   method: 'GET',
   //   url: 'https://billboard-api2.p.rapidapi.com/hot-100',
@@ -99,8 +121,8 @@ function App() {
         
         {chart && !isFetching ? (
         <>
-          {/* <p>To create a playlist, connect to spotify below:</p>
-          <Button>Connect to Spotify</Button> */}
+          <p>To create a playlist, connect to spotify below:</p>
+          <Button variant="contained" onClick={handleSpotifyConnect}>Connect to Spotify</Button>
           <SongList filter={filter} chart = {chart}/>
         </>) 
         : <div><CircularProgress/></div>
