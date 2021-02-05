@@ -28,6 +28,17 @@ a:visited {
 	text-align: center;
 }
 
+.about-text {
+	margin: 0 auto;
+	width: 80%;
+	margin-bottom: 15px;
+}
+
+@media (max-width: 700px) {
+	.about-text {
+		width: 95%;
+	}
+}
 .dropdown-container {
 	display: flex;
 	justify-content: center;
