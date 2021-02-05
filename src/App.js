@@ -9,6 +9,7 @@ import SongSearch from "./components/SongSearch"
 import Header from "./components/Header"
 import { useDarkMode } from "./utils/useDarkMode"
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import CircularProgress from '@material-ui/core/CircularProgress';
 // import Button from "@material-ui/core/Button"
 
 
@@ -54,13 +55,15 @@ function App() {
 
   
   useEffect(()=> {
-    setIsFetching(true)
+    
     async function fetchChart() {
+      setIsFetching(true)
       await axios.get(`${process.env.REACT_APP_BILLBOARD_API_BASE_URL}/chart/${dateFormatted}`)
       .then(res=> {
         setChart(res.data)
       })
       .catch(err => {console.log(err)})
+      setIsFetching(false)
     }
     // axios.request(options)
     // .then(res=> {
@@ -80,7 +83,7 @@ function App() {
     //   setChart(ch)
     // })
     fetchChart()
-    setIsFetching(false)
+    
   },[date, dateFormatted])
   
   
@@ -100,7 +103,7 @@ function App() {
           <Button>Connect to Spotify</Button> */}
           <SongList filter={filter} chart = {chart}/>
         </>) 
-        : <div>Loading songs...</div>
+        : <div><CircularProgress/></div>
         }
       </div>
     </ThemeProvider>
