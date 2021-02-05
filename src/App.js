@@ -13,13 +13,13 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { useLocalStorage } from "./utils/useLocalStorage";
 import Button from "@material-ui/core/Button"
 
+import queryString from 'query-string'
+
 
 function App() {
-
-  let search = window.location.search;
-  let params = new URLSearchParams(search);
-  let queries = params.get('query');
-  console.log(queries)
+  const parsed = queryString.parse(window.location.search)
+  const [accessToken, setAccessToken] = useLocalStorage('access_token', parsed.access_token)
+  const [spotifyConnect, setSpotifyConnect] = useState(false)
   const [darkMode, setDarkMode] = useDarkMode();
   const [isFetching, setIsFetching] = useState(true)
   const paletteType = darkMode ? "dark" : "light";
@@ -42,38 +42,33 @@ function App() {
   const dateFormatted = `${date.year}-${date.month}-${date.day}`
 
   const handleSpotifyConnect = async () => {
-    await axios.get('https://accounts.spotify.com/authorize', {
-      params: {
-        client_id: `${process.env.REACT_APP_CLIENT_ID}`,
-        response_type: 'token',
-        redirect_uri: 'https://doreminisce.kylerichardson.tech'
-      }
-    })
-    .then(res=> {
-      console.log(res)
-
-    })
-    .catch(err=> {
-      console.log(err)
-    })
+    window.open(`${process.env.REACT_APP_BILLBOARD_API_BASE_URL}/auth-spotify`, '_self');
   }
-  // const options = {
-  //   method: 'GET',
-  //   url: 'https://billboard-api2.p.rapidapi.com/hot-100',
-  //   params: {date: dateFormatted, range: '1-100'},
-  //   headers: {
-  //     'x-rapidapi-key': `${process.env.REACT_APP_TOP100_API_KEY}`,
-  //     'x-rapidapi-host': 'billboard-api2.p.rapidapi.com'
-  //   }
-  // };
 
-  // const options = {
-  //   method: 'GET',
-  //   url: `https://www.billboard.com:80/charts/hot-100/${dateFormatted}`,
-  //   headers: {
-  //     'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36'
-  //   }
-  // };
+  const handleCreatePlaylist = () => {
+
+  }
+
+  useEffect(()=> {
+    if (accessToken) {
+      if (parsed) {
+        // setAccessToken(parsed.access_token)
+        // window.open(`${process.env.REACT_APP_URL || 'http://localhost:3000'}`, '_self')
+      }
+      setSpotifyConnect(true)
+      axios.get("https://api.spotify.com/v1/me", {
+        headers: {
+          "Authorization": "Bearer " + accessToken
+        }
+      })
+      .then(res=> {
+        console.log(res.data)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    }
+  }, [accessToken])
 
   
   useEffect(()=> {
@@ -87,23 +82,6 @@ function App() {
       .catch(err => {console.log(err)})
       setIsFetching(false)
     }
-    // axios.request(options)
-    // .then(res=> {
-    //   console.log(res.data)
-    //   setChart(res.data)
-    // })
-    // .catch(err=> console.log(err))
-
-    // axios.request(options)
-    // .then(res=> {
-    //   console.log(res.data)
-    //   setChart(res.data)
-    // })
-    // .catch(err=> console.log(err))
-    // getChart('hot-100', dateFormatted, (err, ch) => {
-    //   if (err) console.log(err)
-    //   setChart(ch)
-    // })
     fetchChart()
     
   },[date, dateFormatted])
@@ -121,8 +99,15 @@ function App() {
         
         {chart && !isFetching ? (
         <>
-          <p>To create a playlist, connect to spotify below:</p>
-          <Button variant="contained" onClick={handleSpotifyConnect}>Connect to Spotify</Button>
+          {!spotifyConnect ? 
+          <div style={{marginBottom: "10px"}}>
+            <p>To create a playlist, connect to spotify below:</p>
+            <Button variant="contained" onClick={handleSpotifyConnect}>Connect to Spotify</Button>
+          </div> : 
+          <div style={{marginBottom: "10px"}}>
+            <p>Successfully connected to Spotify</p>
+            <Button variant="contained" onClick={handleCreatePlaylist}>Create a Playlist</Button>
+          </div>}
           <SongList filter={filter} chart = {chart}/>
         </>) 
         : <div><CircularProgress/></div>
