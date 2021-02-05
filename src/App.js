@@ -38,15 +38,47 @@ function App() {
     day: moment().format('DD')
   })
   const [chart, setChart] = useState(null)
-  const [filter, setFilter] = useState("")
+  const [filter, setFilter] = useLocalStorage('filter', "")
+  const [userId, setUserId] = useState("")
+  const [playlistId, setPlaylistId] = useState("")
   const dateFormatted = `${date.year}-${date.month}-${date.day}`
 
   const handleSpotifyConnect = async () => {
     window.open(`${process.env.REACT_APP_BILLBOARD_API_BASE_URL}/auth-spotify`, '_self');
   }
 
-  const handleCreatePlaylist = () => {
-
+  const handleCreatePlaylist = async () => {
+    try {
+      const newPlaylist = await axios({
+        url: `https://api.spotify.com/v1/users/${userId}/playlists`,
+        method: 'POST',
+        headers: {
+          'Authorization': "Bearer " + accessToken,
+          'Content-Type': 'application/json'
+        },
+        data: {
+          name: `Hot 100 from ${dateFormatted}`,
+          public: true,
+          description: 'created using Do-Re-Minisce (doreminisce.kylerichardson.tech)'
+        }
+      })
+      const playlistId = newPlaylist.data.id
+      const addedTracks = await axios({
+          url: `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
+          method: 'POST',
+          headers: {
+            'Authorization': "Bearer " + accessToken,
+            'Content-Type': 'application/json'
+          },
+          data: {
+            "uris": ["spotify:track:4iV5W9uYEdYUVa79Axb7Rh","spotify:track:1301WleyT98MSxVHPZCA6M", "spotify:episode:512ojhOuo1ktJprKbVcKyQ"]
+          }
+      })
+      console.log(newPlaylist.data.external_urls.spotify)
+    
+    } catch(err) {
+      console.log(err)
+    }
   }
 
   useEffect(()=> {
@@ -62,7 +94,8 @@ function App() {
         }
       })
       .then(res=> {
-        console.log(res.data)
+        // console.log(res.data)
+        setUserId(res.data.id)
       })
       .catch(err => {
         console.log(err)
