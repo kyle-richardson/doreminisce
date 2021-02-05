@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from "react"
 import SongRow from "./SongRow"
+import CircularProgress from '@material-ui/core/CircularProgress';
 // import axios from "axios"
 
 const SongList = ({filter, chart})=> {
@@ -47,7 +48,7 @@ const SongList = ({filter, chart})=> {
         setIsLoading(false)
     },[filter, chart])
     
-    return isLoading ? <p style={{textAlign: "center"}}>Loading songs...</p> : (
+    return isLoading ? <div style={{textAlign: "center"}}><CircularProgress/></div> : (
 
         <>
         {/* <div>
