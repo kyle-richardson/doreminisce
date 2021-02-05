@@ -17,7 +17,7 @@ const SongSearch = ({filter, setFilter})=> {
   },[])
 
     return (
-        <div style={{display: "flex", justifyContent: "center", marginTop: "15px"}}>
+        <div style={{display: "flex", justifyContent: "center", marginTop: "15px", marginBottom: "15px"}}>
           {/* <p>Search List:</p> */}
             <TextField 
               value={filter}

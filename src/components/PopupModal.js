@@ -35,7 +35,7 @@ const PopupModal = ({playlistURL, openModal, handleCloseModal, notFoundList, fai
                 <DialogContentText>
                     We were not able to locate the following songs in Spotify.  Consider looking for the missing songs and adding to the playlist manually:
                 </DialogContentText>
-                {notFoundList.map(item => <p>{item.title}</p>)}
+                {notFoundList.map(item => <p key={item.rank}>{item.title}</p>)}
             </div>
           }
         </DialogContent>
@@ -43,7 +43,7 @@ const PopupModal = ({playlistURL, openModal, handleCloseModal, notFoundList, fai
           <Button autoFocus onClick={handleCloseModal} color="primary">
             Close
           </Button>
-          {!failedPlaylistCreate && <Button onClick={handleViewPlaylist} color="primary" autoFocus>
+          {!failedPlaylistCreate && <Button onClick={handleViewPlaylist} color="secondary" variant="contained" autoFocus>
             View Playlist
           </Button>}
         </DialogActions>

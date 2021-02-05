@@ -34,6 +34,11 @@ a:visited {
 	margin-bottom: 15px;
 }
 
+.spotify-button-fixed {
+	position: sticky;
+	top: 1%;
+}
+
 @media (max-width: 700px) {
 	.about-text {
 		width: 95%;
@@ -112,4 +117,24 @@ a:visited {
 	.song-card {
 		width: 95%;
 	}
+}
+
+.footer {
+	margin-top: 10px;
+}
+.icons > * {
+	padding: 0 5px;
+	vertical-align: middle;
+	font-size: 1.3rem;
+	color: rgb(51, 51, 51);
+}
+.icons > *:active,
+.icons > *:hover,
+.icons > *:visited {
+	color: rgb(51, 51, 51);
+}
+
+.footer-name {
+	display: flex;
+	justify-content: center;
 }
