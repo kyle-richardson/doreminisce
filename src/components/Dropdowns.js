@@ -10,6 +10,7 @@ const Dropdowns = ({date, setDate})=> {
   let months = getMonths()
   let [localDate, setLocalDate] = useState(date)
   let days = getDays(localDate.year, localDate.month)
+
   useEffect(()=> {
   },[])
 
@@ -37,7 +38,8 @@ const Dropdowns = ({date, setDate})=> {
           <Select
             className="dropdown"
             native
-            value={localDate.year}
+            value={String(localDate.year)}
+            // defaultValue={""}
             onChange={handleChange}
             inputProps={{
               name: 'year',
@@ -54,6 +56,7 @@ const Dropdowns = ({date, setDate})=> {
             className="dropdown"
             native
             value={String(localDate.month)}
+            // defaultValue={""}
             onChange={handleChange}
             inputProps={{
               name: 'month',
@@ -69,7 +72,8 @@ const Dropdowns = ({date, setDate})=> {
           <Select
             className="dropdown"
             native
-            value={localDate.day}
+            value={String(localDate.day)}
+            // defaultValue={""}
             onChange={handleChange}
             inputProps={{
               name: 'day',

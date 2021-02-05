@@ -38,15 +38,83 @@ function App() {
     day: moment().format('DD')
   })
   const [chart, setChart] = useState(null)
-  const [filter, setFilter] = useState("")
+  const [filter, setFilter] = useLocalStorage('filter', "")
+  const [userId, setUserId] = useState("")
+  const [playlistId, setPlaylistId] = useState("")
+  const [notFoundList, setNotFoundList] = useState([])
   const dateFormatted = `${date.year}-${date.month}-${date.day}`
 
   const handleSpotifyConnect = async () => {
     window.open(`${process.env.REACT_APP_BILLBOARD_API_BASE_URL}/auth-spotify`, '_self');
   }
 
-  const handleCreatePlaylist = () => {
+  const handleCreatePlaylist = async () => {
+    try {
+      const newPlaylist = await axios({
+        url: `https://api.spotify.com/v1/users/${userId}/playlists`,
+        method: 'POST',
+        headers: {
+          'Authorization': "Bearer " + accessToken,
+          'Content-Type': 'application/json'
+        },
+        data: {
+          name: `Hot 100 from ${dateFormatted}`,
+          public: true,
+          description: 'created using Do-Re-Minisce (doreminisce.kylerichardson.tech)'
+        }
+      })
+      const playlistId = newPlaylist.data.id
+      const tracksToAdd = await findTracksOnSpotify()
+      const tracksToAddFilteredNotFound = tracksToAdd.filter(track=> !track.includes("NOTFOUND"))
+      // console.log(JSON.stringify(tracksToAdd))
+      const addedTracks = await axios({
+          url: `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
+          method: 'POST',
+          headers: {
+            'Authorization': "Bearer " + accessToken,
+            'Content-Type': 'application/json'
+          },
+          data: {
+            "uris": tracksToAddFilteredNotFound
+          }
+      })
+      console.log(newPlaylist.data.external_urls.spotify)
+    
+    } catch(err) {
+      console.log(err)
+    }
+  }
 
+  const findTracksOnSpotify = async () => {
+    try {
+      const trackList = Promise.all(chart.songs.map(async song=> {
+        let songId="NOTFOUND"
+        try {
+          const result = await axios({
+          url: 'https://api.spotify.com/v1/search',
+          method: 'GET',
+          headers: {
+            'Authorization': "Bearer " + accessToken,
+            'Content-Type': 'application/json'
+          },
+          params: {
+            q: `${song.title} ${song.artist.split(" ")[0]}`,
+            type: "track",
+            limit: 1
+          }
+        })
+        if (result.data.tracks.items)
+          songId = result.data.tracks.items[0].id
+        } catch(err ) {
+          // console.log(err)
+          setNotFoundList(prev => [...prev, song])
+        }
+        return `spotify:track:${songId}`
+      }))
+      return trackList
+    } catch (err) {
+      // console.log(err)
+    }
   }
 
   useEffect(()=> {
@@ -62,7 +130,8 @@ function App() {
         }
       })
       .then(res=> {
-        console.log(res.data)
+        // console.log(res.data)
+        setUserId(res.data.id)
       })
       .catch(err => {
         console.log(err)
