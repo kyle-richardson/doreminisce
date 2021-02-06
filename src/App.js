@@ -170,11 +170,10 @@ function App() {
         console.log(err)
       })
     }
-  }, [accessToken])
+  }, [])
 
   
   useEffect(()=> {
-    
     async function fetchChart() {
       setIsFetching(true)
       await axios.get(`${process.env.REACT_APP_BILLBOARD_API_BASE_URL || 'http://localhost:5500' }/chart/${dateFormatted}`)
