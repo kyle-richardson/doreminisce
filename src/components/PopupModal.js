@@ -26,6 +26,13 @@ const PopupModal = ({playlistURL, openModal, handleCloseModal, notFoundList, fai
         aria-labelledby="responsive-dialog-title"
       >
         <DialogTitle id="responsive-dialog-title">{failedPlaylistCreate ? "Failed to create Playlist" : "Playlist Created"}</DialogTitle>
+        {failedPlaylistCreate && 
+        <DialogContent>
+          <DialogContentText>
+          Something went wrong.  Sorry about that.  Please try again.  If it fails again, we may have reached some limits connecting to Spotify's services. If that is the case, try back in a few hours.  In the mean time, feel free to select individual songs to play on Youtube.
+          </DialogContentText>
+        </DialogContent>
+        }
         <DialogContent>
           <DialogContentText>
             Note: Because we use multiple resources that may code songs differently, there may be some errors in the playlist creation.
@@ -35,12 +42,12 @@ const PopupModal = ({playlistURL, openModal, handleCloseModal, notFoundList, fai
                 <DialogContentText>
                     We were not able to locate the following songs in Spotify.  Consider looking for the missing songs and adding to the playlist manually:
                 </DialogContentText>
-                {notFoundList.map(item => <p key={item.rank}>{item.title}</p>)}
+                {notFoundList.map(item => <p key={item.rank}>{`${item.rank}. ${item.title} - ${item.artist}`}</p>)}
             </div>
           }
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={handleCloseModal} color="primary">
+          <Button autoFocus onClick={handleCloseModal} variant="contained" color="primary">
             Close
           </Button>
           {!failedPlaylistCreate && <Button onClick={handleViewPlaylist} color="secondary" variant="contained" autoFocus>

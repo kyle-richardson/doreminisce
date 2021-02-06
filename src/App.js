@@ -17,14 +17,16 @@ import queryString from 'query-string'
 
 
 function App() {
-  const parsed = queryString.parse(window.location.search)
-  const [accessToken, setAccessToken] = useLocalStorage('access_token', parsed.access_token)
+  // const parsed = queryString.parse(window.location.search)
+  // const [accessToken, setAccessToken] = useLocalStorage('access_token', parsed.access_token)
+  const [accessToken, setAccessToken] = useState("")
   const [spotifyConnect, setSpotifyConnect] = useState(false)
   const [darkMode, setDarkMode] = useDarkMode();
   const [isFetching, setIsFetching] = useState(true)
   const [openModal, setOpenModal] = useState(false)
   const [playlistURL, setPlaylistURL] = useState("")
   const [failedPlaylistCreate, setFailedPlaylistCreate] = useState(false)
+  const [isCreatingPlaylist, setIsCreatingPlaylist] = useState(false)
   const paletteType = darkMode ? "dark" : "light";
   const darkTheme = createMuiTheme({
     palette: {
@@ -54,14 +56,21 @@ function App() {
   }
   const handleCloseModal = () => {
     setOpenModal(false)
-    setFailedPlaylistCreate(false)
   }
 
   const handleOpenModal = () => {
     setOpenModal(true)
   }
 
+  useEffect(()=> {
+    if(!openModal) {
+      setFailedPlaylistCreate(false)
+      setNotFoundList([])
+    }
+  },[openModal])
+
   const handleCreatePlaylist = async () => {
+    setIsCreatingPlaylist(true)
     try {
       const newPlaylist = await axios({
         url: `https://api.spotify.com/v1/users/${userId}/playlists`,
@@ -97,6 +106,7 @@ function App() {
       setFailedPlaylistCreate(true) 
     }
     handleOpenModal()
+    setIsCreatingPlaylist(false)
   }
 
   const findTracksOnSpotify = async () => {
@@ -105,8 +115,12 @@ function App() {
         url: `${process.env.REACT_APP_BILLBOARD_API_BASE_URL || 'http://localhost:5500' }/auth-search`,
         method: 'GET'
       })
-      const trackList = Promise.all(chart.songs.map(async song=> {
+      const trackList = await Promise.all(chart.songs.map(async song=> {
         let songId="NOTFOUND"
+        let simplifiedArtistSearch = song.artist.split(" ")[0]
+        if (simplifiedArtistSearch.toLowerCase()==="the" || simplifiedArtistSearch.toLowerCase()==="a") {
+          simplifiedArtistSearch = song.artist.split(" ")[1]
+        }
         try {
           const result = await axios({
           url: 'https://api.spotify.com/v1/search',
@@ -116,7 +130,7 @@ function App() {
             'Content-Type': 'application/json'
           },
           params: {
-            q: `${song.title} ${song.artist.split(" ")[0]}`,
+            q: `${song.title} ${simplifiedArtistSearch}`,
             type: "track",
             limit: 1
           }
@@ -131,24 +145,26 @@ function App() {
       }))
       return trackList
     } catch (err) {
-      // console.log(err)
+      console.log(err)
     }
   }
 
   useEffect(()=> {
-    if (accessToken) {
-      if (parsed) {
-        // setAccessToken(parsed.access_token)
-        // window.open(`${process.env.REACT_APP_URL || 'http://localhost:3000'}`, '_self')
-      }
+    const parsed = queryString.parse(window.location.search)
+    if (parsed.access_token) {
+      // if (parsed) {
+      //     setAccessToken(parsed.access_token)
+      //    window.open(`${process.env.REACT_APP_URL || 'http://localhost:3000'}`, '_self')
+      // }
       setSpotifyConnect(true)
       axios.get("https://api.spotify.com/v1/me", {
         headers: {
-          "Authorization": "Bearer " + accessToken
+          "Authorization": "Bearer " + parsed.access_token
         }
       })
       .then(res=> {
         setUserId(res.data.id)
+        setAccessToken(parsed.access_token)
       })
       .catch(err => {
         console.log(err)
@@ -191,7 +207,8 @@ function App() {
           <SpotifyButton 
               spotifyConnect = {spotifyConnect}
               handleCreatePlaylist={handleCreatePlaylist}
-              handleSpotifyConnect={handleSpotifyConnect}/>
+              handleSpotifyConnect={handleSpotifyConnect}
+              isCreatingPlaylist = {isCreatingPlaylist}/>
           <SongList filter={filter} chart = {chart} dateFormatted = {dateFormatted}/>
           </>}
       </div>
