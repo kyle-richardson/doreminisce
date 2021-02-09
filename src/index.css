@@ -25,9 +25,16 @@ a:visited {
 }
 
 .App {
+	position: relative;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
 	text-align: center;
 }
 
+.content-wrapper {
+	flex: 1;
+}
 .about-text {
 	margin: 0 auto;
 	width: 80%;
@@ -120,7 +127,14 @@ a:visited {
 }
 
 .footer {
-	margin-top: 10px;
+	/* margin-top: 10px; */
+	position: relative;
+	bottom: 0;
+	width: 100%;
+	/* padding: 20px 0; */
+	/* background-color: #69868c; */
+	/* color: #f2f2f2; */
+	text-align: center;
 }
 .icons > * {
 	padding: 0 5px;

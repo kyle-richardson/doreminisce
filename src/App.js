@@ -191,27 +191,30 @@ function App() {
   return (
     <ThemeProvider theme={darkTheme}>
       <div className="App">
-        <PopupModal 
-          failedPlaylistCreate = {failedPlaylistCreate} 
-          openModal = {openModal} 
-          notFoundList = {notFoundList} 
-          handleCloseModal = {handleCloseModal}
-          playlistURL = {playlistURL}
-        />
-        <Header toggleDarkMode={toggleDarkMode}/>
-        <Dropdowns date = {date} setDate = {setDate}/>
-        <SongSearch filter={filter} setFilter = {setFilter}/>
-        {isFetching ?  <CircularProgress color="secondary"/> : 
-        <>
-          <SpotifyButton 
-              spotifyConnect = {spotifyConnect}
-              handleCreatePlaylist={handleCreatePlaylist}
-              handleSpotifyConnect={handleSpotifyConnect}
-              isCreatingPlaylist = {isCreatingPlaylist}/>
-          <SongList filter={filter} chart = {chart} dateFormatted = {dateFormatted}/>
-          </>}
+        <div className="content-wrapper">
+          <PopupModal 
+            failedPlaylistCreate = {failedPlaylistCreate} 
+            openModal = {openModal} 
+            notFoundList = {notFoundList} 
+            handleCloseModal = {handleCloseModal}
+            playlistURL = {playlistURL}
+          />
+          <Header toggleDarkMode={toggleDarkMode}/>
+          <Dropdowns date = {date} setDate = {setDate}/>
+          <SongSearch filter={filter} setFilter = {setFilter}/>
+          {isFetching ?  <CircularProgress color="secondary"/> : 
+          <>
+            <SpotifyButton 
+                spotifyConnect = {spotifyConnect}
+                handleCreatePlaylist={handleCreatePlaylist}
+                handleSpotifyConnect={handleSpotifyConnect}
+                isCreatingPlaylist = {isCreatingPlaylist}/>
+            <SongList filter={filter} chart = {chart} dateFormatted = {dateFormatted}/>
+            </>}
+        </div>
+        <Footer/>
       </div>
-      <Footer/>
+      
     </ThemeProvider>
     
   );
