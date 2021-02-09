@@ -14,8 +14,9 @@ const SongList = ({filter, chart, dateFormatted})=> {
                 ele.title.toLowerCase().includes(filter.toLowerCase()) || 
                 ele.artist.toLowerCase().includes(filter.toLowerCase()))
             setFilteredChart(newChart)
+            setIsLoading(false)
         }
-        setIsLoading(false)
+        
     },[filter, chart])
     
     return isLoading ? <div style={{textAlign: "center"}}><CircularProgress color="secondary" /></div> : (
@@ -24,7 +25,7 @@ const SongList = ({filter, chart, dateFormatted})=> {
           Top songs for week of {dateFormatted}
         </h3>
         <div className="list-container-fallback">
-            {filteredChart.map((song, ind) => (
+            {filteredChart && filteredChart.map((song, ind) => (
                 <SongRow key = {ind} song={song}/>
             ))}
         </div>
