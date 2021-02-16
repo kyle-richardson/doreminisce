@@ -88,7 +88,7 @@ function App() {
       const playlistId = newPlaylist.data.id
       const tracksToAdd = await findTracksOnSpotify()
       const tracksToAddFilteredNotFound = tracksToAdd.filter(track=> !track.includes("NOTFOUND"))
-      const addedTracks = await axios({
+      await axios({
           url: `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
           method: 'POST',
           headers: {
