@@ -3,7 +3,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Tooltip from '@material-ui/core/Tooltip'
 
-const SongRow = ({song, handleCheck, allChecked, isChecked, darkMode}) => {
+const SongRow = ({song, handleCheck, isChecked, darkMode}) => {
     return (
         <div className="song-card" style={{background: `${darkMode ? "rgb(51,51,51)" : "rgb(228,228,228)"}`}} >
             <div className="song-card-left" onClick={()=>window.open(`https://www.youtube.com/results?search_query=${song.title} ${song.artist}`)}>
@@ -20,9 +20,9 @@ const SongRow = ({song, handleCheck, allChecked, isChecked, darkMode}) => {
                 
                     <FormControlLabel
                         control={
-                            <Tooltip title="Add to playlist">
+                            <Tooltip title={isChecked[String(song.rank)] ? "Remove from playlist" : "Add to playlist"}>
                                 <Checkbox
-                                    checked={isChecked[String(song.rank)]}
+                                    checked={!!isChecked[String(song.rank)]}
                                     onChange={(e)=>handleCheck(e, false)}
                                     name={String(song.rank)}
                                     color="primary"

@@ -24,7 +24,13 @@ const SongList = ({
     const [isLoading, setIsLoading] = useState(true)
     const handleCheck = (e, isAll=false) => {
         if(isAll) {
-            setAllChecked(!allChecked)
+            filteredChart.forEach(song => {
+                setIsChecked(prev =>({
+                    ...prev, 
+                    [song.rank]: e.target.checked
+                }))
+            })
+            setAllChecked(e.target.checked)
         }
         else {
             const {name} = e.target
@@ -37,16 +43,7 @@ const SongList = ({
 
     }
 
-    useEffect(()=> {
-
-        if(allChecked){
-            setIsChecked(generateCheckedObjects(true))
-        }
-        else {
-            setIsChecked(generateCheckedObjects(false))
-        }
-        // eslint-disable-next-line
-    }, [allChecked])
+   
 
 
     useEffect(()=> {
@@ -61,6 +58,20 @@ const SongList = ({
         }
         // eslint-disable-next-line
     },[filter, chart])
+
+    // useEffect(()=> {
+    //     if(filteredChart) {
+    //         const checkForAllChecked = ()=> {
+    //             filteredChart.forEach(song=>{
+    //                 if(!isChecked[song.rank]) return false
+    //             })
+    //             return true
+    //         }
+    
+    //         setAllChecked(checkForAllChecked())
+    //     }
+        
+    // }, [filteredChart, isChecked])
     
     return isLoading ? <div style={{textAlign: "center", marginTop: "15vh"}}><CircularProgress color="secondary" /></div> : (
         <>
@@ -75,7 +86,7 @@ const SongList = ({
                     
                         <FormControlLabel
                             control={
-                                <Tooltip title="Select all">
+                                <Tooltip title={`${allChecked ? "Deselect" : "Select"} all${filter && " filtered"}`}>
                                     <Checkbox
                                         checked={allChecked}
                                         onChange={(e)=>handleCheck(e, true)}

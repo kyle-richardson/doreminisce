@@ -29,8 +29,8 @@ function App() {
   const [failedPlaylistCreate, setFailedPlaylistCreate] = useState(false)
   const [isCreatingPlaylist, setIsCreatingPlaylist] = useState(false)
   const [filteredChart, setFilteredChart] = useState()
-  const [isChecked, setIsChecked] = useState("isChecked", generateCheckedObjects(true))
-  const [allChecked, setAllChecked] = useLocalStorage("allchecked", true)
+  const [isChecked, setIsChecked] = useState(generateCheckedObjects(true))
+  const [allChecked, setAllChecked] = useState(false)
   const paletteType = darkMode ? "dark" : "light";
   const darkTheme = createMuiTheme({
     palette: {
