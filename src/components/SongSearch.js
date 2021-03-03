@@ -1,6 +1,7 @@
 import React, {useEffect} from "react"
 import TextField from "@material-ui/core/TextField"
 import Button from "@material-ui/core/Button"
+import CloseIcon from '@material-ui/icons/Close';
 
 const SongSearch = ({filter, setFilter})=> {
   const handleChange = (event) => {
@@ -17,15 +18,19 @@ const SongSearch = ({filter, setFilter})=> {
   },[])
 
     return (
-        <div style={{display: "flex", justifyContent: "center", marginTop: "15px", marginBottom: "15px"}}>
-          {/* <p>Search List:</p> */}
+        <div className="searchbox-container" >
             <TextField 
+              fullWidth
               value={filter}
               label="Search List"
               variant="outlined"
               onChange={handleChange}
             />
-            <Button color="primary" onClick={handleClear}>x</Button>
+            <div style={{position:"relative", left: "-65px", maxWidth: "0px"}}>
+              <Button color="primary" onClick={handleClear}>
+                <CloseIcon/>
+              </Button>
+            </div>
         </div>
     )
 }
