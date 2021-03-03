@@ -9,7 +9,7 @@ const Header = ({toggleDarkMode})=> {
 
     return (
         <div>
-            <div style={{display:"flex", justifyContent:"center", alignItems: "center"}}>
+            <div style={{display:"flex", justifyContent:"center", alignItems: "center", marginTop: "30px"}}>
                 <h1 style={{marginRight: "15px"}}>Do-Re-Minisce</h1>
                 <About/>
             </div>
