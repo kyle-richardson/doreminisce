@@ -26,3 +26,11 @@ export const getDays = (year, month) => {
     }
     return days.reverse()
 }
+
+export const generateCheckedObjects =(bool) =>{
+    const list = {}
+    for (let i=0;i<100;i++) {
+        list[String(i+1)]=bool
+    }
+    return list
+}

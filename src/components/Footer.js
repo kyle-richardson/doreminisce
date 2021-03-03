@@ -1,15 +1,16 @@
 import React from "react"
-import { AiFillGithub, AiFillLinkedin, AiFillMail } from 'react-icons/ai'
+import { AiFillGithub, AiFillLinkedin, AiFillMail} from 'react-icons/ai'
 
-const Footer = () => {
+const Footer = ({darkMode}) => {
+    const tempColor = darkMode ? "white" : "black"
     return (
         <div className="footer">
             <div className="footer-name">
                 <span>Made by Kyle </span>
                 <div className="icons">
-                    <a href="https://github.com/kyle-richardson"><AiFillGithub /></a>
-                    <a href="https://www.linkedin.com/in/kyle-m-richardson/"><AiFillLinkedin/></a>
-                    <a href="mailto:kylerichardson1@gmail.com"><AiFillMail/></a>
+                    <a style={{color: tempColor}} href="https://github.com/kyle-richardson"><AiFillGithub /></a>
+                    <a style={{color: tempColor}} href="https://www.linkedin.com/in/kyle-m-richardson/"><AiFillLinkedin/></a>
+                    <a style={{color: tempColor}} href="mailto:kylerichardson1@gmail.com"><AiFillMail/></a>
                 </div>
             </div> 
         </div>

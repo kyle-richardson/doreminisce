@@ -14,6 +14,7 @@ import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { useLocalStorage } from "./utils/useLocalStorage";
 import queryString from 'query-string'
+import {generateCheckedObjects} from "./utils/functions"
 
 
 function App() {
@@ -27,6 +28,9 @@ function App() {
   const [playlistURL, setPlaylistURL] = useState("")
   const [failedPlaylistCreate, setFailedPlaylistCreate] = useState(false)
   const [isCreatingPlaylist, setIsCreatingPlaylist] = useState(false)
+  const [filteredChart, setFilteredChart] = useState()
+  const [isChecked, setIsChecked] = useState("isChecked", generateCheckedObjects(true))
+  const [allChecked, setAllChecked] = useLocalStorage("allchecked", true)
   const paletteType = darkMode ? "dark" : "light";
   const darkTheme = createMuiTheme({
     palette: {
@@ -115,7 +119,8 @@ function App() {
         url: `${process.env.REACT_APP_BILLBOARD_API_BASE_URL || 'http://localhost:5500' }/auth-search`,
         method: 'GET'
       })
-      const trackList = await Promise.all(chart.songs.map(async song=> {
+      const chartToUse = chart.songs.filter(song => isChecked[song.rank])
+      const trackList = await Promise.all(chartToUse.map(async song=> {
         let songId="NOTFOUND"
         let simplifiedArtistSearch = song.artist.split(" ")[0]
         if (simplifiedArtistSearch.toLowerCase()==="the" || simplifiedArtistSearch.toLowerCase()==="a") {
@@ -202,17 +207,28 @@ function App() {
           <Header toggleDarkMode={toggleDarkMode}/>
           <Dropdowns date = {date} setDate = {setDate}/>
           <SongSearch filter={filter} setFilter = {setFilter}/>
-          {isFetching ?  <CircularProgress color="secondary"/> : 
+          {isFetching ?  <div style={{marginTop: "15vh"}}><CircularProgress color="secondary"/></div> : 
           <>
             <SpotifyButton 
                 spotifyConnect = {spotifyConnect}
                 handleCreatePlaylist={handleCreatePlaylist}
                 handleSpotifyConnect={handleSpotifyConnect}
                 isCreatingPlaylist = {isCreatingPlaylist}/>
-            <SongList filter={filter} chart = {chart} dateFormatted = {dateFormatted}/>
+            <SongList 
+              filter={filter} 
+              chart = {chart} 
+              dateFormatted = {dateFormatted}
+              darkMode={darkMode}
+              setFilteredChart={setFilteredChart}
+              filteredChart={filteredChart}
+              isChecked={isChecked}
+              setIsChecked={setIsChecked}
+              allChecked={allChecked}
+              setAllChecked={setAllChecked}
+            />
             </>}
         </div>
-        <Footer/>
+        <Footer darkMode={darkMode}/>
       </div>
       
     </ThemeProvider>
