@@ -35,7 +35,7 @@ const PopupModal = ({playlistURL, openModal, handleCloseModal, notFoundList, fai
         }
         <DialogContent>
           <DialogContentText>
-            Note: Because we use multiple resources that may code songs differently, there may be some errors in the playlist creation.
+          Note: Because we use multiple resources that store song metadata slightly different from each other, there may be some errors in the playlist creation.
           </DialogContentText>
           {notFoundList.length > 0 && !failedPlaylistCreate && 
             <div style={{display: "flex", flexDirection: "column"}}>

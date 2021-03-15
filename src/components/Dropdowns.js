@@ -4,9 +4,9 @@ import FormControl from "@material-ui/core/FormControl"
 import InputLabel from "@material-ui/core/InputLabel"
 import Button from "@material-ui/core/Button"
 import moment from "moment"
-import {getYears, getMonths, getDays} from "../utils/functions"
+import {getYears, getMonths, getDays, generateCheckedObjects} from "../utils/functions"
 
-const Dropdowns = ({date, setDate})=> {
+const Dropdowns = ({date, setDate, setIsChecked, setAllChecked})=> {
   let years = getYears(1950)
   let months = getMonths()
   const [localDate, setLocalDate] = useState(date)
@@ -47,6 +47,8 @@ const Dropdowns = ({date, setDate})=> {
         day: localDate.day
       })
     }
+    setIsChecked(generateCheckedObjects(true))
+    setAllChecked(false)
       
     
   }
