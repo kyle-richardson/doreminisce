@@ -143,6 +143,15 @@ a:visited {
 	background: black;
 }
 
+.loading-skeleton {
+	width: 70%;
+}
+/* .loading-skeleton > * {
+	margin-bottom: -15px;
+	border-radius: 8px;
+	height: 100px;
+} */
+
 .song-card,
 .list-title {
 	display: flex;
@@ -181,7 +190,8 @@ a:visited {
 
 @media (max-width: 700px) {
 	.song-card,
-	.list-title {
+	.list-title,
+	.loading-skeleton {
 		width: 95%;
 	}
 }

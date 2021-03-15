@@ -1,11 +1,11 @@
 import React, {useState, useEffect} from "react"
 import SongRow from "./SongRow"
 import moment from "moment"
-import CircularProgress from '@material-ui/core/CircularProgress';
-import {generateCheckedObjects} from "../utils/functions"
+// import CircularProgress from '@material-ui/core/CircularProgress';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Tooltip from '@material-ui/core/Tooltip'
+
 
 const SongList = ({
     filter, 
@@ -17,9 +17,11 @@ const SongList = ({
     isChecked, 
     setIsChecked, 
     allChecked, 
-    setAllChecked
+    setAllChecked,
+    isFetching
     })=> {
     // const maxOnPage = 25
+    const skeletonCopyNum = 20;
     const date = moment(dateFormatted).format("MMM DD, YYYY")
     const [isLoading, setIsLoading] = useState(true)
     const handleCheck = (e, isAll=false) => {
@@ -43,9 +45,6 @@ const SongList = ({
 
     }
 
-   
-
-
     useEffect(()=> {
         setIsLoading(true)
         if (chart) {
@@ -58,22 +57,10 @@ const SongList = ({
         }
         // eslint-disable-next-line
     },[filter, chart])
-
-    // useEffect(()=> {
-    //     if(filteredChart) {
-    //         const checkForAllChecked = ()=> {
-    //             filteredChart.forEach(song=>{
-    //                 if(!isChecked[song.rank]) return false
-    //             })
-    //             return true
-    //         }
     
-    //         setAllChecked(checkForAllChecked())
-    //     }
-        
-    // }, [filteredChart, isChecked])
+    return (
+    // isLoading ? <div style={{textAlign: "center", marginTop: "15vh"}}><CircularProgress color="secondary" /></div> : 
     
-    return isLoading ? <div style={{textAlign: "center", marginTop: "15vh"}}><CircularProgress color="secondary" /></div> : (
         <>
         
         <div className="list-container-fallback">
@@ -101,16 +88,18 @@ const SongList = ({
                 </div>
             </div>
         </div>
-            {filteredChart && filteredChart.map((song, ind) => (
+            {filteredChart && !isFetching ? filteredChart.map((song, ind) => (
                 <SongRow 
                     key = {ind} 
+                    isLoaded={true}
                     song={song} 
                     allChecked = {allChecked} 
                     isChecked={isChecked} 
                     handleCheck={handleCheck}
                     darkMode= {darkMode}
                 />
-            ))}
+            )) : 
+            [...Array(skeletonCopyNum)].map((e, i) => <SongRow key={i} isLoaded={false}/>)}
         </div>
         </>
         

@@ -11,7 +11,7 @@ import Header from "./components/Header"
 import SpotifyButton from "./components/SpotifyButton"
 import { useDarkMode } from "./utils/useDarkMode"
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
-import CircularProgress from '@material-ui/core/CircularProgress';
+// import CircularProgress from '@material-ui/core/CircularProgress';
 import { useLocalStorage } from "./utils/useLocalStorage";
 import queryString from 'query-string'
 import {generateCheckedObjects} from "./utils/functions"
@@ -32,18 +32,6 @@ function App() {
   const [isChecked, setIsChecked] = useState(generateCheckedObjects(true))
   const [allChecked, setAllChecked] = useState(false)
   const paletteType = darkMode ? "dark" : "light";
-  const darkTheme = createMuiTheme({
-    palette: {
-      type: paletteType,
-      secondary: {
-        main: "rgb(17, 185, 91)"
-      }
-    }
-  });
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-  };
-
   const [date, setDate] = useLocalStorage('date', {
     year: moment().format("YYYY"),
     month: moment().format('MM'),
@@ -54,6 +42,28 @@ function App() {
   const [userId, setUserId] = useState("")
   const [notFoundList, setNotFoundList] = useState([])
   const dateFormatted = `${date.year}-${date.month}-${date.day}`
+
+  const darkTheme = createMuiTheme({
+    palette: {
+      type: paletteType,
+      secondary: {
+        main: "rgb(17, 185, 91)"
+      }
+    },
+    breakpoints: {
+      values: {
+        xs: 0,
+      sm: 700,
+      md: 960,
+      lg: 1280,
+      xl: 1920,
+      }
+    }
+  });
+
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
 
   const handleSpotifyConnect = async () => {
     window.open(`${process.env.REACT_APP_BILLBOARD_API_BASE_URL || 'http://localhost:5500' }/auth-spotify`, '_self');
@@ -68,8 +78,10 @@ function App() {
 
   useEffect(()=> {
     if(!openModal) {
-      setFailedPlaylistCreate(false)
-      setNotFoundList([])
+      setTimeout(()=>{ 
+        setFailedPlaylistCreate(false)
+        setNotFoundList([])
+      }, 500);
     }
   },[openModal])
 
@@ -113,6 +125,8 @@ function App() {
     setIsCreatingPlaylist(false)
   }
 
+  /* Uses different authentication on Spotify API for simple searches, so it doesn't utilize as many 'API allowances' */
+
   const findTracksOnSpotify = async () => {
     try {
       const searchAccessToken = await axios({
@@ -155,6 +169,9 @@ function App() {
   }
 
   useEffect(()=> {
+
+    /* confirm if connected with Spotify by checking the url parsed token */
+
     const parsed = queryString.parse(window.location.search)
     if (parsed.access_token) {
       // if (parsed) {
@@ -205,18 +222,26 @@ function App() {
             playlistURL = {playlistURL}
           />
           <Header toggleDarkMode={toggleDarkMode}/>
-          <Dropdowns date = {date} setDate = {setDate}/>
+          <Dropdowns 
+            date = {date} 
+            setDate = {setDate}
+            setIsChecked = {setIsChecked}
+            setAllChecked = {setAllChecked}
+          />
           <SongSearch filter={filter} setFilter = {setFilter}/>
-          {isFetching ?  <div style={{marginTop: "15vh"}}><CircularProgress color="secondary"/></div> : 
+          {/* {isFetching ?  <div style={{marginTop: "15vh"}}><CircularProgress color="secondary"/></div> :  */}
           <>
             <SpotifyButton 
                 spotifyConnect = {spotifyConnect}
                 handleCreatePlaylist={handleCreatePlaylist}
                 handleSpotifyConnect={handleSpotifyConnect}
-                isCreatingPlaylist = {isCreatingPlaylist}/>
+                isCreatingPlaylist = {isCreatingPlaylist}
+                isChecked = {isChecked}
+                />
             <SongList 
               filter={filter} 
               chart = {chart} 
+              isFetching = {isFetching}
               dateFormatted = {dateFormatted}
               darkMode={darkMode}
               setFilteredChart={setFilteredChart}
@@ -226,7 +251,8 @@ function App() {
               allChecked={allChecked}
               setAllChecked={setAllChecked}
             />
-            </>}
+            </>
+            {/* } */}
         </div>
         <Footer darkMode={darkMode}/>
       </div>

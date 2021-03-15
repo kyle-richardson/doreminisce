@@ -33,7 +33,7 @@ const About = () => {
             playlist of the Billboard Hot 100 of the date chosen. Enjoy!
           </DialogContentText>
           <DialogContentText>
-            Note: Because we use multiple resources that may code songs differently, there may be some errors in the playlist creation.
+            Note: Because we use multiple resources that store song metadata slightly different from each other, there may be some errors in the playlist creation.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
