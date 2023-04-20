@@ -2,13 +2,16 @@
 import React, {useState, useEffect} from "react"
 import moment from "moment"
 import axios from "axios"
-import Dropdowns from "./components/Dropdowns"
-import SongList from "./components/SongList"
-import SongSearch from "./components/SongSearch"
-import PopupModal from "./components/PopupModal"
-import Footer from "./components/Footer"
-import Header from "./components/Header"
-import SpotifyButton from "./components/SpotifyButton"
+import {
+  Dropdowns,
+  SongList,
+  SongSearch,
+  PopupModal,
+  Footer,
+  Header,
+  SpotifyButton,
+  Welcome
+} from './components'
 import { useDarkMode } from "./utils/useDarkMode"
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 // import CircularProgress from '@material-ui/core/CircularProgress';
@@ -41,6 +44,7 @@ function App() {
   const [filter, setFilter] = useLocalStorage('filter', "")
   const [userId, setUserId] = useState("")
   const [notFoundList, setNotFoundList] = useState([])
+  const [hasVisited, setHasVisited] = useState(false)
   const dateFormatted = `${date.year}-${date.month}-${date.day}`
 
   const darkTheme = createMuiTheme({
@@ -213,6 +217,7 @@ function App() {
   return (
     <ThemeProvider theme={darkTheme}>
       <div className="App">
+        <Welcome />
         <div className="content-wrapper">
           <PopupModal 
             failedPlaylistCreate = {failedPlaylistCreate} 
